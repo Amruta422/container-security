@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     stages {
         stage('Checkout') {
             steps {
@@ -44,7 +43,7 @@ pipeline {
             deleteDir() // Clean up workspace
         }
         success {
-            echo 'Pipeline succeeded!'
+            echo 'Pipeline succeede!'
            
         }
         failure {
