@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/Amruta422/container-security'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    bat 'docker build -t amruta422/container-security-image:latest -f images/Dockerfile .'
+                }
+            }
+        }
+        stage('Scan Docker Image with Trivy') {
+            steps {
+                script {
+                    bat 'C:\\Jenkins\\scanners\\trivy-scan.bat pranav224/container-security-image:latest'
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    bat 'dckr_pat_ppYKEDMyikMZJqV1HvHX80btyK8 | docker login -u amruta422 --password-stdin'
+                    bat 'docker push amruta422/container-security-image:latest'
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    bat 'kubectl --kubeconfig="C:\\Users\\amrut\\.kube\\config" apply -f k8s/deployment.yaml --validate=false'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Performing cleanup...'
+            deleteDir() // Clean up workspace
+        }
+        success {
+            echo 'Pipeline succeeded!'
+           
+        }
+        failure {
+            echo 'Pipeline failed!'
+            
+        }
+    }
+}
