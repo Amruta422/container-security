@@ -23,7 +23,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    bat 'dckr_pat_ppYKEDMyikMZJqV1HvHX80btyK8 | docker login -u amruta422 --password-stdin'
+                    bat 'echo dckr_pat_ppYKEDMyikMZJqV1HvHX80btyK8 | docker login -u amruta422 --password-stdin'
                     bat 'docker push amruta422/container-security-image:latest'
                 }
             }
